@@ -1,6 +1,7 @@
 package com.coolweather.admin.coolweather;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -58,6 +59,7 @@ public class ChooseAreaFragment extends Fragment {
     /*
     * 当前选中的省份*/
     private Province selectedProvince;
+
     /*当前选择的市*/
     private City selectedCity;
     /*
@@ -94,6 +96,13 @@ public class ChooseAreaFragment extends Fragment {
                     selectedCity = cityList.get(position);
                     queryCounties();
                 }
+                else if(currentLevel == LEVEL_COUNTY){
+                    String weatherId = countyList.get(position).getWeatherId();
+                    Intent intent = new Intent(getActivity(),WeatherActivity.class);
+                    intent.putExtra("weather_id",weatherId);
+                    startActivity(intent);
+                    getActivity().finish();
+                }
             }
         });
 
@@ -108,8 +117,6 @@ public class ChooseAreaFragment extends Fragment {
             }
         });
 
-
-        //为什么最后查询省？
         queryProvinces();
     }
 
@@ -173,7 +180,7 @@ public class ChooseAreaFragment extends Fragment {
             queryFromServer(address,"city");
         }
     }
-//这里为什么定义为final
+    //这里为什么定义为final
     private void queryFromServer(String address,final String type) {
         showProgressDialog();
         HttpUtil.sendOkHttpRequest(address, new Callback() {
@@ -236,7 +243,6 @@ public class ChooseAreaFragment extends Fragment {
             progressDialog.setCanceledOnTouchOutside(false);
         }
         progressDialog.show();
-
     }
 
 }
